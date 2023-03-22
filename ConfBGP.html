@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Ferramenta para ajudar na configuração do BGP</title>
+	<style>
+	/* Estilo para o formulário */
+form {
+  display: flex;
+  flex-direction: column;
+  width: 25%; /* define o tamanho das colunas */
+  margin: auto;
+}
+
+label {
+  font-weight: bold;
+  margin-bottom: 10px;
+  font-family: courier, monospace;
+  color: black;
+  font-size: 10pt;
+}
+
+input[type="text"] {
+  padding: 5px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+button {
+  padding: 10px;
+  background-color: #008CBA;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+/* Estilo para a área de resultados */
+.shell-body {
+  font-family: Consolas, Menlo, monospace;
+  background-color: #333;
+  color: white;
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 5px;
+  width: 50%;
+  margin: auto;
+}
+}
+	</style>
+  </head>
+  <body>
+    <form>
+      <div id="planilhas">
+        <div class="planilha">
+          <label for="nome_planilha_1">Nome da planilha:</label>
+          <input type="text" id="nome_planilha_1" name="nome_planilha_1">
+          <label for="endereco_ip_1">Endereço IP:</label>
+          <input type="text" id="endereco_ip_1" name="endereco_ip_1">
+          <button type="button" class="remover-planilha">-</button>
+        </div>
+      </div>
+      <button type="button" id="adicionar-planilha">+</button>
+      <button type="button" id="gerar-configuracao">Gerar configuração</button>
+    </form>
+
+    <div class="shell-body" id="resultado"></div>
+
+    <script>
+      // Contador de planilhas
