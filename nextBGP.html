@@ -101,27 +101,28 @@ button {
 
         // Exibir os valores das variáveis em algum lugar na página
 document.getElementById("resultado").innerHTML =
-    '<div class="shell-body">' +
+	'<div class="shell-body">' +
+	"configure terminal" + "<br>" +
 	"hostname " + hostname + "<br>" +
-    "router bgp  " + localAs + "<br>" +
-    "bgp router-id  " + routerId + "<br>" +
-    "timers bgp 1 5" + "<br>" +
-    "network " + network + "<br>" +
-    "neighbor " + remoteAsSede1 + " remote-as 65001" + "<br>" +
-    "neighbor "+ remoteAsSede1 + " weight 400" + "<br>" +
-    "neighbor "+ remoteAsSede1 + " prefix-list DEFAULT out" + "<br>" +
+	"router bgp  " + localAs + "<br>" +
+	"bgp router-id  " + routerId + "<br>" +
+	"timers bgp 1 5" + "<br>" +
+	"network " + network + "<br>" +
+	"neighbor " + remoteAsSede1 + " remote-as 65001" + "<br>" +
+	"neighbor "+ remoteAsSede1 + " weight 400" + "<br>" +
+	"neighbor "+ remoteAsSede1 + " prefix-list DEFAULT out" + "<br>" +
 	"neighbor " + remoteAsSede2 + " remote-as 65001" + "<br>" +
-    "neighbor "+ remoteAsSede2 + " weight 300" + "<br>" +
-    "neighbor "+ remoteAsSede2 + " prefix-list DEFAULT out" + "<br>" +
-	 "neighbor " + remoteAsSENTIJ1 + " remote-as 65002" + "<br>" +
-    "neighbor "+ remoteAsSENTIJ1 + " weight 200" + "<br>" +
-    "neighbor "+ remoteAsSENTIJ1 + " prefix-list DEFAULT out" + "<br>" +
+	"neighbor "+ remoteAsSede2 + " weight 300" + "<br>" +
+	"neighbor "+ remoteAsSede2 + " prefix-list DEFAULT out" + "<br>" +
+	"neighbor " + remoteAsSENTIJ1 + " remote-as 65002" + "<br>" +
+	"neighbor "+ remoteAsSENTIJ1 + " weight 200" + "<br>" +
+	"neighbor "+ remoteAsSENTIJ1 + " prefix-list DEFAULT out" + "<br>" +
 	"neighbor " + remoteAsSENTIJ2 + " remote-as 65002" + "<br>" +
-    "neighbor "+ remoteAsSENTIJ2 + " weight 100" + "<br>" +
-    "neighbor "+ remoteAsSENTIJ2 + " prefix-list DEFAULT out" + "<br>" +
-    "ip prefix-list DEFAULT seq 5 permit " + network + "<br>" +
-    "wr" +
-    "</div>";
+	"neighbor "+ remoteAsSENTIJ2 + " weight 100" + "<br>" +
+	"neighbor "+ remoteAsSENTIJ2 + " prefix-list DEFAULT out" + "<br>" +
+	"ip prefix-list DEFAULT seq 5 permit " + network + "<br>" +
+	"wr" +
+	"</div>";
       }
     </script>
   </body>
