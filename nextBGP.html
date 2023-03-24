@@ -112,12 +112,16 @@ document.getElementById("resultado").innerHTML =
 	"network " + network + "<br>" +
 	"neighbor " + remoteAsSede1 + " remote-as 65000" + "<br>" +
 	"neighbor "+ remoteAsSede1 + " weight 400" + "<br>" +
+	"neighbor "+ remoteAsSede1 + " description" + hostname + " x FIRSEDE - Link1" + "<br>" +
 	"neighbor " + remoteAsSede2 + " remote-as 65000" + "<br>" +
 	"neighbor "+ remoteAsSede2 + " weight 300" + "<br>" +
+	"neighbor "+ remoteAsSede2 + " description" + hostname + " x FIRSEDE - Link2" + "<br>" +
 	"neighbor " + remoteAsSENTIJ1 + " remote-as 65000" + "<br>" +
 	"neighbor "+ remoteAsSENTIJ1 + " weight 200" + "<br>" +
+	"neighbor "+ remoteAsSENTIJ1 + " description" + hostname + " x SENTIJ - Link1" + "<br>" +
 	"neighbor " + remoteAsSENTIJ2 + " remote-as 65000" + "<br>" +
 	"neighbor "+ remoteAsSENTIJ2 + " weight 100" + "<br>" +
+	"neighbor "+ remoteAsSENTIJ2 + " description" + hostname + " x SENTIJ - Link2" + "<br>" +
 	"wr" +
 	"</div>";
       }
