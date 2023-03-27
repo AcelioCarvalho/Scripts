@@ -116,29 +116,28 @@ button {
     <div id="resultado" style="padding-top:50px; padding-bottom:50px" ></div>
 	
 	  <script>
-// Seleciona o elemento select
-	const selectOption = document.getElementById('select-option');
+	
 
-// Seleciona os elementos div que contém os forms
-	const formOption1 = document.getElementById('form-option1');
-	const formOption2 = document.getElementById('form-option2');
-
-// Adiciona um evento de mudança ao select
-	selectOption.addEventListener('change', function() {
-  // Verifica qual opção foi selecionada
-  	if (selectOption.value === 'option1') {
-    // Exibe o form da opção 1 e esconde o da opção 2
-    	formOption1.style.display = 'block';
-    	formOption2.style.display = 'none';
-  	} else {
-    // Exibe o form da opção 2 e esconde o da opção 1
-    	formOption1.style.display = 'none';
-    	formOption2.style.display = 'block';
- 	 }
-	}); 
+	
 	<\script>
 
     <script>
+		
+	// Seleciona o elemento select
+	const selectOption = document.getElementById('select-option');
+
+	// Seleciona os elementos div que contém os forms
+	const formOption1 = document.getElementById('form-option1');
+	const formOption2 = document.getElementById('form-option2');
+	
+	// Adiciona um evento de mudança ao select
+	selectOption.addEventListener('change', function() {
+  	// Verifica qual opção foi selecionada
+  	if (selectOption.value === 'option1') {
+    	// Exibe o form da opção 1 e esconde o da opção 2
+    	formOption1.style.display = 'block';
+    	formOption2.style.display = 'none';
+			  
       function mostrarValores() {
         // Capturar os valores dos campos do formulário
 	var hostname = document.getElementById("hostname").value;
@@ -178,6 +177,48 @@ document.getElementById("resultado").innerHTML =
 	"wr" +
 	"</div>";
       }
+  	} else {
+    	// Exibe o form da opção 2 e esconde o da opção 1
+    	formOption1.style.display = 'none';
+    	formOption2.style.display = 'block';
+				  
+      function mostrarValores() {
+        // Capturar os valores dos campos do formulário
+	var hostname = document.getElementById("hostname").value;
+        var routerId = document.getElementById("routerId").value;
+        var network = document.getElementById("network").value;
+	var remoteAsSede1 = document.getElementById("remoteAsSede1").value;
+	var remoteAsSede2 = document.getElementById("remoteAsSede2").value;
+	var remoteAsSENTIJ1 = document.getElementById("remoteAsSENTIJ1").value;
+	var remoteAsSENTIJ2 = document.getElementById("remoteAsSENTIJ2").value;
+
+        // Exibir os valores das variáveis no final da página
+	document.getElementById("resultado").innerHTML =
+	'<div class="shell-body">' +
+	"enable-bgp" + "<br>" +
+	"configure-bgp" + "<br>" +
+	"admin" + "<br>" +
+	"enable" + "<br>" +
+	"admin" + "<br>" +
+	"configure terminal" + "<br>" +
+	"neighbor " + remoteAsSede1 + " remote-as 65000" + "<br>" +
+	"neighbor "+ remoteAsSede1 + " weight 400" + "<br>" +
+	"neighbor "+ remoteAsSede1 + " description " + hostname + " x FIRSEDE - Link1" + "<br>" +
+	"neighbor " + remoteAsSede2 + " remote-as 65000" + "<br>" +
+	"neighbor "+ remoteAsSede2 + " weight 300" + "<br>" +
+	"neighbor "+ remoteAsSede2 + " description " + hostname + " x FIRSEDE - Link2" + "<br>" +
+	"neighbor " + remoteAsSENTIJ1 + " remote-as 65000" + "<br>" +
+	"neighbor "+ remoteAsSENTIJ1 + " weight 200" + "<br>" +
+	"neighbor "+ remoteAsSENTIJ1 + " description " + hostname + " x SENTIJ - Link1" + "<br>" +
+	"neighbor " + remoteAsSENTIJ2 + " remote-as 65000" + "<br>" +
+	"neighbor "+ remoteAsSENTIJ2 + " weight 100" + "<br>" +
+	"neighbor "+ remoteAsSENTIJ2 + " description " + hostname + " x SENTIJ - Link2" + "<br>" +
+	"wr" +
+	"</div>";
+     	 }
+ 	 }
+	}); 
+
     </script>
   </body>
 </html>
