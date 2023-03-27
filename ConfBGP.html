@@ -62,11 +62,11 @@ button {
 	</div>
 	    
 	<select id="select-option">
-  	<option value="filial">Filial</option>
-  	<option value="core">Concetradores</option>
+  	<option value="option1">Filial</option>
+  	<option value="option2">Concetradores</option>
 	</select>
 	 
-	<div id="form-filial">
+	<div id="form-option1">
 	    
 	<label for="hostname">Sigla da Unidade:</label>
         <input placeholder="Sigla" type="text" class="block w-full h-12 pl-2 text-gray-700 bg-transparent border-gray-800 rounded-md w-100"  id="hostname" name="hostname">
@@ -91,7 +91,7 @@ button {
       	<button type="button" onclick="mostrarValores()">Gerar Configuração</button>
 	</div>
 	    
-	<div id="form-core">
+	<div id="form-option2">
 	    
 	<label for="hostname">Sigla da Unidade:</label>
         <input placeholder="Sigla" type="text" class="block w-full h-12 pl-2 text-gray-700 bg-transparent border-gray-800 rounded-md w-100"  id="hostname" name="hostname">
@@ -114,7 +114,29 @@ button {
     </form>
 
     <div id="resultado" style="padding-top:50px; padding-bottom:50px" ></div>
+	
+	  <script>
+// Seleciona o elemento select
+	const selectOption = document.getElementById('select-option');
 
+// Seleciona os elementos div que contém os forms
+	const formOption1 = document.getElementById('form-option1');
+	const formOption2 = document.getElementById('form-option2');
+
+// Adiciona um evento de mudança ao select
+	selectOption.addEventListener('change', function() {
+  // Verifica qual opção foi selecionada
+  	if (selectOption.value === 'option1') {
+    // Exibe o form da opção 1 e esconde o da opção 2
+    	formOption1.style.display = 'block';
+    	formOption2.style.display = 'none';
+  	} else {
+    // Exibe o form da opção 2 e esconde o da opção 1
+    	formOption1.style.display = 'none';
+    	formOption2.style.display = 'block';
+ 	 }
+	}); 
+	<\script>
 
     <script>
       function mostrarValores() {
