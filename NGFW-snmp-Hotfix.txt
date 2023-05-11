@@ -1,4 +1,5 @@
 #!/bin/bash
+#By: Acelio Silva - asilva@blockbit.com
 #copia os arquivos originais
 cp -f /opt/omne/apply/omne-apply-snmp /opt/omne/apply/omne-apply-snmp.hf
 cp -f /opt/omne/admin/ui/layouts/settings/system/notifications/notifications.js /opt/omne/admin/ui/layouts/settings/system/notifications/notifications.js.hf
