@@ -1,8 +1,8 @@
 #!/bin/bash
 #copia os arquivos originais
-cp -f /opt/omne/apply/omne-apply-snmp /opt/omne/apply/omne-apply-snmp.old
-cp -f /opt/omne/admin/ui/layouts/settings/system/notifications/notifications.js /opt/omne/admin/ui/layouts/settings/system/notifications/notifications.js.old
-cp -f /opt/omne/admin/ui/dev/index.js /opt/omne/admin/ui/dev/index.js.old
+cp -f /opt/omne/apply/omne-apply-snmp /opt/omne/apply/omne-apply-snmp.hf
+cp -f /opt/omne/admin/ui/layouts/settings/system/notifications/notifications.js /opt/omne/admin/ui/layouts/settings/system/notifications/notifications.js.hf
+cp -f /opt/omne/admin/ui/dev/index.js /opt/omne/admin/ui/dev/index.js.hf
 #Corrigir os arquivos
 sed -i 's/3DES/AES/' /opt/omne/apply/omne-apply-snmp
 sed -i 's/3des/aes/' /opt/omne/apply/omne-apply-snmp
