@@ -1,0 +1,184 @@
+#!/bin/bash
+
+# Update yum repolist
+/opt/omne/apply/omne-apply-update -s -c -b
+
+# Run new Zone Protection supporting IPv6
+/opt/omne/apply/omne-apply-firewall-input
+/opt/omne/schema/upd/2.4.0.pl
+
+#BUG-5114 pppoe not update ip-up.local
+/opt/omne/init/omne-dynamic-tun-advpn.sh
+
+#SUS / BUG-10920
+# Create new routine to kill PPPD connecetion process in the adsl-stop file
+if ! grep -Fq "ps aux  |  grep -i" /sbin/adsl-stop;
+then
+/usr/bin/sed  "/^# add old default gw back.*/i ps aux  |  grep -i '/usr/sbin/pppd ipparam' |  awk '{print \$2}' | xargs kill -9 \nps aux  |  grep -i '/sbin/pppoe-connect' |  awk '{print \$2}' | xargs kill -9" -i /sbin/adsl-stop
+fi
+
+# SUS / Azure Ticket 18973
+# Enables IPv6 on NGINX
+# Verify if IPv6 listen socket is already set for HTTP in the config file
+if ! grep -Fq "listen [::]:80 default_server;" /etc/nginx/nginx.conf;
+then
+    /usr/bin/sed '/listen 80 default_server;.*/a \\t\tlisten [::]:80 default_server;' -i /etc/nginx/nginx.conf
+fi
+# Verify if IPv6 listen socket is already set for HTTPS in the config file
+if ! grep -Fq "listen [::]:98 ssl http2;" /etc/nginx/nginx.conf;
+then
+   /usr/bin/sed '/listen 98 ssl http2; # HTTPS_PORT.*/a \\t\tlisten [::]:98 ssl http2;' -i /etc/nginx/nginx.conf
+fi
+
+# Restart NGINX service
+systemctl restart nginx
+
+# SUS / Azure Ticket 14229
+# Explicit declaration of key exchange algorithms, OpenSSH_7.4p1 does not support (-) or (+) syntax feature
+# Removes Diffie-Hellman SHA-1 and similarities from the default list (SHA-1 is weak)
+# (diffie-hellman-group1-sha1, diffie-hellman-group14-sha1, diffie-hellman-group-exchange-sha1)
+# Add kex algos in the sshd config file
+
+# Verify if the directive is already set in the config file
+if ! grep -xq '^KexAlgorithms .*' /etc/ssh/sshd_config;
+then
+        /usr/bin/sed '/^# Ciphers and keying.*/i #Key exchange algorithms\nKexAlgorithms curve25519-sha256,curve25519-sha256@libssh.org,ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521,diffie-hellman-group-exchange-sha256,diffie-hellman-group16-sha512,diffie-hellman-group18-sha512,diffie-hellman-group14-sha256\n' -i /etc/ssh/sshd_config
+fi
+
+# Restart the OpenSSH Daemon service (sshd)
+systemctl restart sshd
+
+# SUS Ticket 5115: [UTM-4191]
+# Disable the maximal rate limit set by icmp_ratelimit for sending ICMP packets in ALL types
+# Default mask: 0000001100000011000 (6168)
+# New Mask:     0000000000000000000 (0)
+# Set kernel parameter manually and also add to the conf file if its not there
+sysctl -w net.ipv4.icmp_ratemask=0
+if ! grep -q net.ipv4.icmp_ratemask /etc/sysctl.d/00-omne.conf
+then
+    echo "net.ipv4.icmp_ratemask = 0" >> /etc/sysctl.d/00-omne.conf
+fi
+
+# PBI-23010: Novo Engine para consultas WMI
+# install/update wmi-cli
+/usr/bin/yum -y install wmi_cli
+
+#PBO-21383 omne-bb-update
+/usr/bin/yum -y install omne-bb-update
+
+# wmi-cli: add temporary files clean routine on cron.d
+echo -e "SHELL=/bin/bash\n\n*/1 * * * * root find /tmp -type d -name \"_MEI*\" -mmin +1 -exec rm -rf {} \; 2> /dev/null" > /etc/cron.d/omne-wmi-clean
+
+# BUG-23646: Warning na execução de scripts perl dependendo da configuração do shell variáveis LOCALE
+# Verify if the directive is already set in the config file
+if ! grep -xq '^PERL_BADLANG=.*' /etc/environment;
+then
+    echo "PERL_BADLANG=0" >> /etc/environment
+fi
+
+# PBI#25120: disable automatic update checkbox
+TCLUSTER=`/usr/bin/psql -U postgres brcconfig -t -A -c "select count(*) from box_cluster"`
+if [ $TCLUSTER -gt 0 ]; then
+        /usr/bin/psql -U postgres brcconfig -t -A -c "update box_settings set config_value = false where config_key = 'enable_update';"
+
+        UPD_DB=`/usr/bin/psql -U postgres brcconfig -t -A -c "select count(*) from box_settings where config_key = 'enable_bases_update' AND config_value = 'true';"`
+        if [ $UPD_DB -gt 0 ]; then
+                /usr/bin/psql -U postgres brcconfig -t -A -c "update box_schedules set command_path = '/opt/omne/apply/omne-apply-update -b' where command_path like '/opt/omne/apply/omne-apply-update %';"
+        else
+                /usr/bin/psql -U postgres brcconfig -t -A -c "delete from box_schedules where command_path like '/opt/omne/apply/omne-apply-update %';"
+        fi
+        /opt/omne/apply/omne-apply-schedules -d
+fi
+
+# PBI 23995 - new Captive Portal
+yum install -y captive-portal-frontend
+yum install -y captive-portal-backend
+/opt/omne/apply/omne-apply-auth-portal
+
+# PBI-10879 CPU Temperature on System Status
+# Restart monitor and reporter services
+/opt/omne/apply/omne-apply-monitor
+/opt/omne/apply/omne-apply-reporter
+
+# TASK 28113 - sync de mudanca da 2.2.2 para 2.4
+echo "2.4" > /etc/yum/vars/releasever
+
+# BUG#27074 IPSEC VPN commands not working
+sed -i 's!"/var/run/charon.vici"!"/var/run/strongswan/charon.vici"!g' /opt/omne/conf/vpn-monitor.conf
+IS_VPN_MONITOR_RUNNING=$(systemctl show -p SubState vpn-monitor | cut -d '=' -f 2)
+if [ $IS_VPN_MONITOR_RUNNING == "running" ]; then
+    systemctl restart vpn-monitor
+fi
+
+# Replace VPN RAS NG package for new RPM
+/usr/bin/yum remove -y utm-vpnras-api
+/usr/bin/yum install -y vpnrasng
+/usr/bin/yum install -y vpnrasng-cmd
+/usr/bin/yum install -y vpnrasng-api
+/usr/bin/cp /usr/vpnserver/vpn_server.config /usr/libexec/vpnrasng/vpnserver/vpn_server.config
+/usr/bin/systemctl stop vpnserver
+/opt/omne/apply/omne-apply-vpnrasng-server
+/usr/bin/yum remove -y utm-vpnserver
+
+# PBI-33743: ssh-proxy package installation
+yum install -y ssh-proxy
+
+# PBI-35533: stop relevant services, rewrite webfilter.conf, changes tables squemas and restart services
+systemctl stop squid
+systemctl stop squid-explicit
+/opt/omne/apply/omne-apply-proxy-http
+
+tables=$(sqlite3 /data/log/stats_webfilter.db ".tables %domains_%")
+for table in $tables; do
+        cmd=$(sqlite3 /data/log/stats_webfilter.db ".schema $table")
+        if [[ ! "$cmd" =~ "surfing_time" ]]; then
+                sqlite3 /data/log/stats_webfilter.db "ALTER TABLE "$table" ADD COLUMN surfing_time bigint;"
+        fi
+done
+
+# Bug 35507: Bug - Reports - Não gera relatório "Analyzer" para thread protection
+tables=$(sqlite3 /data/log/stats_atp.db ".tables %domains_%")
+for table in $tables; do
+        cmd=$(sqlite3 /data/log/stats_atp.db ".schema $table")
+        if [[ ! "$cmd" =~ "surfing_time" ]]; then
+                sqlite3 /data/log/stats_atp.db "ALTER TABLE "$table" ADD COLUMN surfing_time bigint;"
+        fi
+done
+
+# Bug 35981: [NGFW] Analyzer > User Behavior não fazendo sumarização de logs
+tables=$(sqlite3 /data/log/stats_user.db ".tables %domains_%")
+for table in $tables; do
+        cmd=$(sqlite3 /data/log/stats_user.db ".schema $table")
+        if [[ ! "$cmd" =~ "surfing_time" ]]; then
+                sqlite3 /data/log/stats_user.db "ALTER TABLE "$table" ADD COLUMN surfing_time bigint;"
+        fi
+done
+
+arqdbs=$(ls /data/log/log_sessions_*.db)
+for arqdb in $arqdbs; do
+        tables=$(sqlite3 $arqdb ".tables %webfilter_%")
+        for table in $tables; do
+                cmd=$(sqlite3 $arqdb ".schema $table")
+                if [[ ! "$cmd" =~ "surfing_time" ]]; then
+                        sqlite3 $arqdb "ALTER TABLE "$table" ADD COLUMN surfing_time bigint;"
+                fi
+        done
+done
+systemctl restart reporter*
+systemctl restart squid
+systemctl restart squid-explicit
+
+#BUG-22036 - restart squid new config
+/opt/omne/apply/omne-apply-proxy-http
+
+#TE-BUG-30710
+/opt/omne/apply/omne-apply-admin
+
+# PBI-33321 - Google Authenticator package
+yum install -y google-authenticator
+
+# PBI-36996 - MFA API package
+yum install -y mfa-api
+
+# Restart some UTM services
+/home/admin/bin/fwreload
