@@ -18,7 +18,7 @@ for eth in $interfaces; do
 
   # Comparar os MAC addresses
   if [ "$mac_phys" != "$mac_db" ]; then
-    # Mostrar MAC addresses antes do update
+    # Mostrar MAC address antes do update
     echo -e "Interface: $eth\nNovo MAC: $mac_phys\nAntigo MAC: $mac_db\n"
 
     # Update do novo MAC address no banco de dados
