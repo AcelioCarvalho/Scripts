@@ -2,29 +2,29 @@
 # By: Vinicius Silva
 # Revision: Acelio Silva
 
-# Database credentials
+# Acesso ao banco de dados
 DB_PSQL="psql -U postgres brcconfig"
 
-# Get list of network interfaces
+# Pegar o nome das interfaces de rede
 interfaces=$(ifconfig -a | grep -ioE "eth[0-9]+: " | tr -d ':')
 
-# Loop through each interface
+# Loop para validar interfaces
 for eth in $interfaces; do
-  # Get physical MAC address
+  # Pagar o MAC address da placa de rede
   mac_phys=$(ethtool -P "$eth" | awk '{print $3}')
 
-  # Get MAC address from database
+  # Pegar o MAC address do banco de dados
   mac_db=$($DB_PSQL -t -A -c "SELECT macaddrs FROM box_net_device WHERE name='$eth';")
 
-  # Compare MAC addresses
+  # Comparar os MAC addresses
   if [ "$mac_phys" != "$mac_db" ]; then
-    # show MAC addresses before update
-    echo -e "Interface: $eth\nNew MAC: $mac_phys\nOld MAC: $mac_db\n"
+    # Mostrar MAC addresses antes do update
+    echo -e "Interface: $eth\nNovo MAC: $mac_phys\nAntigo MAC: $mac_db\n"
 
-    # Update MAC address in database
+    # Update do novo MAC address no banco de dados
     $DB_PSQL -c "UPDATE box_net_device SET macaddrs = '$mac_phys' WHERE name='$eth';" &> /dev/null
 
-    # Reload interface
+    # Aplicar novo mac address na interface
     /opt/omne/apply/omne-apply-eth -i "$eth"
   fi
 done
