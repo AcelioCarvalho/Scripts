@@ -25,6 +25,6 @@ for eth in $interfaces; do
     $DB_PSQL -c "UPDATE box_net_device SET macaddrs = '$mac_phys' WHERE name='$eth';" &> /dev/null
 
     # Aplicar novo mac address na interface
-    /opt/omne/apply/omne-apply-eth -i "$eth"
+    /opt/omne/apply/omne-apply-eth -i "$eth" &> /dev/null
   fi
 done
