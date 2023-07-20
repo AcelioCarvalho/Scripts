@@ -16,9 +16,6 @@ echo "Configurando as novas MIBs ..."
 /usr/bin/sed -i '/ipsec_connecting/a extend IPSECSTATE \/bin/\bash \/opt\/omne\/conf\/mibs\/ipsec_state' /etc/snmp/snmpd.conf
 /usr/bin/sed -i '/ipsec_connecting/a extend IPSECNAME \/bin\/bash \/opt\/omne\/conf\/mibs\/ipsec_name' /etc/snmp/snmpd.conf
 
-
-#echo -e '#!/bin/bash\n\ngrep XfrmInStateProtoError /proc/net/xfrm_stat | awk "{print \$2}"' > /opt/omne/conf/mibs/xfrm_in
-
 # Configurando dos scripts
 cat << EOF > /opt/omne/conf/mibs/xfrm_in
 #!/bin/bash
