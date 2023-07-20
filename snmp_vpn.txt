@@ -39,13 +39,13 @@ EOF
 cat << EOF > /opt/omne/conf/mibs/ipsec_state
 #!/bin/bash
 
-for id in `psql -U postgres brcconfig -t -A -c "select tunnel_id from vpn_ipsec_tunnel ;"`
+for id in \$(psql -U postgres brcconfig -t -A -c "select tunnel_id from vpn_ipsec_tunnel ;")
 
 do
 
-state=`psql -U postgres brcconfig -t -A -c "select cfgkey from vpn_ipsec_tunnel_config where cfgkey = 'enabled' AND tunnel_id ='$id' ;"`
+state=\$(psql -U postgres brcconfig -t -A -c "select cfgkey from vpn_ipsec_tunnel_config where cfgkey = 'enabled' AND tunnel_id ='\$id' ;")
 
-        if [ -z "$state" ]; then
+        if [ -z "\$state" ]; then
 
                 echo "disabled"
          else
@@ -58,10 +58,10 @@ EOF
 cat << EOF > /opt/omne/conf/mibs/ipsec_status
 #!/bin/bash
 
-for id in `psql -U postgres brcconfig -t -A -c "select tunnel_id from vpn_ipsec_tunnel ;"`
+for id in \$(psql -U postgres brcconfig -t -A -c "select tunnel_id from vpn_ipsec_tunnel ;")
 do
 
-        if ! strongswan status tun$id | grep "ESTABLISHED" &>/dev/null
+        if ! strongswan status tun\$id | grep "ESTABLISHED" &>/dev/null
          then
                 echo "0"
         else
