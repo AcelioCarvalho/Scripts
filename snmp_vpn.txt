@@ -2,7 +2,7 @@
 # Por: Acelio Silva
 
 # Dependecia da conf do SNMPv3
-if ! grep "rouser bbsuporte"  /etc/snmp/snmpd.conf; then
+if ! grep "rouser bbsuporte"  /etc/snmp/snmpd.conf &>/dev/null; then
 
     echo "SNMPv3 do Suporte não configurado"
     exit 0
