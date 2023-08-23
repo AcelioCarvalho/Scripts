@@ -1,20 +1,42 @@
 #!/bin/bash
 # Por: Acelio Silva
 
+APPLY="/opt/omne/apply/omne-apply-snmp"
+CONF="/etc/snmp/snmpd.conf"
+
 # Dependecia da conf do SNMPv3
 if ! grep "rouser bbsuporte"  /etc/snmp/snmpd.conf &>/dev/null; then
 
     echo "SNMPv3 do Suporte não configurado"
     exit 0
 fi
+# Evitar duplicidade
+if ! grep "IPSECSTATUS"  $CONF &>/dev/nul; then
+    
+    echo "Configurando as novas MIBs na Conf..."
 
-echo "Configurando as novas MIBs ..."
+    /usr/bin/sed -i '/ipsec_connecting/a extend XFRMOUT \/bin\/bash \/opt\/omne\/conf\/mibs\/xfrm_out' $CONF
+    /usr/bin/sed -i '/ipsec_connecting/a extend XFRMIN \/bin\/bash \/opt\/omne\/conf\/mibs\/xfrm_in' $CONF
+    /usr/bin/sed -i '/ipsec_connecting/a extend IPSECSTATUS \/bin/bash \/opt\/omne\/conf/mibs\/ipsec_status' $CONF
+    /usr/bin/sed -i '/ipsec_connecting/a extend IPSECSTATE \/bin/\bash \/opt\/omne\/conf\/mibs\/ipsec_state' $CONF
+    /usr/bin/sed -i '/ipsec_connecting/a extend IPSECNAME \/bin\/bash \/opt\/omne\/conf\/mibs\/ipsec_name' $CONF
 
-/usr/bin/sed -i '/ipsec_connecting/a extend XFRMOUT \/bin\/bash \/opt\/omne\/conf\/mibs\/xfrm_out' /etc/snmp/snmpd.conf
-/usr/bin/sed -i '/ipsec_connecting/a extend XFRMIN \/bin\/bash \/opt\/omne\/conf\/mibs\/xfrm_in' /etc/snmp/snmpd.conf
-/usr/bin/sed -i '/ipsec_connecting/a extend IPSECSTATUS \/bin/bash \/opt\/omne\/conf/mibs\/ipsec_status' /etc/snmp/snmpd.conf
-/usr/bin/sed -i '/ipsec_connecting/a extend IPSECSTATE \/bin/\bash \/opt\/omne\/conf\/mibs\/ipsec_state' /etc/snmp/snmpd.conf
-/usr/bin/sed -i '/ipsec_connecting/a extend IPSECNAME \/bin\/bash \/opt\/omne\/conf\/mibs\/ipsec_name' /etc/snmp/snmpd.conf
+else
+     echo "MIBs de VPN já adicinada na configuração"
+fi
+
+if ! grep "IPSECSTATUS"  $APPLY &>/dev/nul; then
+
+echo "Configurando as novas MIBs no Apply..."
+
+/usr/bin/sed -i '/ipsec_connecting/a extend XFRMOUT \/bin\/bash \/opt\/omne\/conf\/mibs\/xfrm_out' $APPLY
+/usr/bin/sed -i '/ipsec_connecting/a extend XFRMIN \/bin\/bash \/opt\/omne\/conf\/mibs\/xfrm_in' $APPLY
+/usr/bin/sed -i '/ipsec_connecting/a extend IPSECSTATUS \/bin/bash \/opt\/omne\/conf/mibs\/ipsec_status' $APPLY
+/usr/bin/sed -i '/ipsec_connecting/a extend IPSECSTATE \/bin/\bash \/opt\/omne\/conf\/mibs\/ipsec_state' $APPLY
+/usr/bin/sed -i '/ipsec_connecting/a extend IPSECNAME \/bin\/bash \/opt\/omne\/conf\/mibs\/ipsec_name' $APPLY
+else
+     echo "MIBs de VPN já adicinada no apply"
+fi
 
 # Configurando dos scripts
 cat << EOF > /opt/omne/conf/mibs/xfrm_in
