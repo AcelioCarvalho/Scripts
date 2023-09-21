@@ -12,9 +12,9 @@
 
 #SUS / BUG-10920
 # Create new routine to kill PPPD connecetion process in the adsl-stop file
-if ! grep -Fq "ps aux  |  grep -i" /sbin/adsl-stop;
+if ! grep -Fq "ps aux  |  grep -i" /sbin/adsl-stop;
 then
-/usr/bin/sed  "/^# add old default gw back.*/i ps aux  |  grep -i '/usr/sbin/pppd ipparam' |  awk '{print \$2}' | xargs kill -9 \nps aux  |  grep -i '/sbin/pppoe-connect' |  awk '{print \$2}' | xargs kill -9" -i /sbin/adsl-stop
+/usr/bin/sed  "/^# add old default gw back.*/i ps aux  |  grep -i '/usr/sbin/pppd ipparam' |  awk '{print \$2}' | xargs kill -9 \nps aux  |  grep -i '/sbin/pppoe-connect' |  awk '{print \$2}' | xargs kill -9" -i /sbin/adsl-stop
 fi
 
 # SUS / Azure Ticket 18973
