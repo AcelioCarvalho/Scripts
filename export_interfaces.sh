@@ -28,6 +28,6 @@ for net in `$psql "select name from box_net_device where alias='f' and onboot='t
         
         # Exibi no farmato csv
         # Interface de Rede Local, Interface de Rede Virtual, Grupo de Interface, Utilizar protocolo UDP, Monitoramento, Chave de identificação
-        echo "$net, $vip, $count, 0, 0, $(openssl rand -base64 12 | tr -d '+/' | head -c 12)"
+        echo "$net, $vip, $count, 0, 0, $(openssl rand -base64 7 | tr -d '+/' | head -c 7)"
     fi
 done
