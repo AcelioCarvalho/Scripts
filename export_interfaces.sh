@@ -10,10 +10,10 @@ echo "Interface de Rede Local, Interface de Rede Virtual, Grupo de Interface, Ut
 psql="psql -U postgres brcconfig -t -A -c"
 count=0
 
-for vip in `$psql "select name from box_net_device where alias='t' or  virtual='t' and onboot='t' and obj_addr_id IS NOT NULL AND NOT name LIKE '%.%'"| sort`;do
+for vip in `$psql "select name from box_net_device where alias='t' or  virtual='t' and onboot='t' and obj_addr_id IS NOT NULL AND NOT name LIKE '%.%' ORDER BY name"`;do
 
     # Lista interfaces VIP
-    net_local=`echo "$vip" | cut -d 'v' -f 1 | cut -d ':' -f 1 |sort`
+    net_local=`echo "$vip" | awk -F "v|:" '{print$1}'`
 
     # Evitar listar interfaces sem VIP
     if [ -n "$net_local" ]; then
