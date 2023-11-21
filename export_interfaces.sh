@@ -4,7 +4,7 @@
 # Exportador de configuração padronizada para importar no servidor secudario do HA 2.4.1.
 
 # Cabeçalho do arquivo modelo csv
-echo "Interface de Rede Local, Interface de Rede Virtual, Grupo de Interface, Utilizar protocolo UDP, Monitoramento, Chave de identificação"
+echo "Interface de Rede Local, Interface de Rede Virtual, Grupo de Interface, Utilizar protocolo UDP, Monitoramento, Chave de identificacao"
 
 # Lista locais todas interfaces habilitadas e que contem IP.
 psql="psql -U postgres brcconfig -t -A -c"
