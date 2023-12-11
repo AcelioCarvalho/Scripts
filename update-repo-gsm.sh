@@ -18,4 +18,6 @@ if [ -n "$license" ]; then
                         echo "$file nothing to do"
                 fi
         done
+else 
+                        echo "license not found"
 fi
