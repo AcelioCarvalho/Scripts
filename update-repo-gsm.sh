@@ -15,7 +15,7 @@ if [ -n "$license" ]; then
                         sed -i "/sslverify=1/a sslcacert=\/opt\/cert\/BlockBitCA.crt" $file
                         echo "$file | changed"
                 else
-                        echo "$file nothing to do"
+                        echo "$file | nothing to do"
                 fi
         done
 else 
