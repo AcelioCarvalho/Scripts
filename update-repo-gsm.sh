@@ -13,7 +13,7 @@ if [ -n "$license" ]; then
                         sed -i "/sslverify=1/a sslclientkey=\/opt\/cert\/$license\/$license.key" $file
                         sed -i "/sslverify=1/a sslclientcert=\/opt\/cert\/$license\/$license.crt" $file
                         sed -i "/sslverify=1/a sslcacert=\/opt\/cert\/BlockBitCA.crt" $file
-                        echo "$file changed"
+                        echo "$file | changed"
                 else
                         echo "$file nothing to do"
                 fi
