@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # By: Acelio Silva
 # Add SSL cert and key to repo files
 
