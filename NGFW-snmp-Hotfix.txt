@@ -1,6 +1,11 @@
 #!/bin/bash
 #By: Acelio Silva - asilva@blockbit.com
 #copia os arquivos originais
+if [ -e /opt/omne/apply/omne-apply-snmp.hf ]; then
+  echo "Correção já aplicada"
+  exit 0
+fi
+
 cp -f /opt/omne/apply/omne-apply-snmp /opt/omne/apply/omne-apply-snmp.hf
 cp -f /opt/omne/admin/ui/layouts/settings/system/notifications/notifications.js /opt/omne/admin/ui/layouts/settings/system/notifications/notifications.js.hf
 cp -f /opt/omne/admin/ui/dev/index.js /opt/omne/admin/ui/dev/index.js.hf
