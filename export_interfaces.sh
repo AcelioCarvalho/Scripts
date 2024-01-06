@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Criado por: Acelio Silva
-# Exportador de configuração padronizada para importar no servidor secudario do HA 2.4.1.
+# Exportador de configuração padronizada para importar na Listagem de Interfaces no serviço do HA do NGFW 2.4.1.
 
 # Cabeçalho do arquivo modelo csv
 echo "Interface de Rede Local, Interface de Rede Virtual, Grupo de Interface, Utilizar protocolo UDP, Monitoramento, Chave de identificacao"
