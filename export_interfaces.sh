@@ -19,9 +19,14 @@ for vip in `$psql "select name from box_net_device where alias='t' or  virtual='
     if [ -n "$net_local" ]; then
 
 	count=$((count + 1))
-        
+ 
+ 	# Evitar que o grupo da interface seja igual o da heartbeat
+  	if [ $count = 100 ]; then
+                count=$((count + 1))
+        fi
+	
         # Exibi no farmato csv
         # Interface de Rede Local, Interface de Rede Virtual, Grupo de Interface, Utilizar protocolo UDP, Monitoramento, Chave de identificação
-        echo "$net_local, $vip, $count, 0, 0, $(openssl rand -base64 7 | tr -d '+/' | head -c 7)"
+        echo "$net_local, $vip, $count, 0, 1, $(openssl rand -base64 7 | tr -d '+/' | head -c 7)"
     fi
 done
