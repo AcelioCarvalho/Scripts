@@ -32,7 +32,7 @@ while true; do
     echo -e "\nEscolha uma opção:"
     echo "1. Instalar todos hotfix"
     echo "2. Listar hotfix instalados"
-    echo "3. Remover último pacote"
+    echo "3. Remover último hotfix"
     echo "4. Remover todos hotfix"
     echo -e "5. Sair\n"
 
