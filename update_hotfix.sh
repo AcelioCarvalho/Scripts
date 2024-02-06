@@ -13,7 +13,7 @@ baixar_hotfix() {
         for hf in `curl -sS "https://docs.blockbit.com/display/RC/Hotfixes" | grep -oE '(https://s3.amazonaws.com/repo.blockbit.com/hotfix/([^\"]*)|https://shlink.blockbit.com/\w+)'`; do
 
         if echo "$hf" | grep "shlink.blockbit.com" &>/dev/null; then
-                hf=`curl -L -w "%{url_effective}" -o /dev/null -s "$hf"`
+                hf=`curl -s -w "%{redirect_url}" -o /dev/null "$hf"`
                 hotfix=`echo "$hf" | cut -d "/" -f9 | sed "s/\%2F/_/g"`
         else
                 hotfix=`echo "$hf" | cut -d "/"  -f 7`
