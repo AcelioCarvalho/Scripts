@@ -13,14 +13,14 @@ baixar_hotfix() {
         for hf in `curl -sS "https://docs.blockbit.com/display/RC/Hotfixes" | grep -oE '(https://s3.amazonaws.com/repo.blockbit.com/hotfix/([^\"]*)|https://shlink.blockbit.com/\w+)'`; do
 
         if echo "$hf" | grep "shlink.blockbit.com" &>/dev/null; then
-                hf=`curl -s -I -k $hf | sed -n 's/^Location: //p'`
+                hf=`curl -s -I -k $hf | sed -n 's/^Location: //p' | sed 's/\r//'`
                 
                 hotfix=`echo "$hf" | cut -d "/" -f9 | sed "s/\%2F/_/g"`
         else
                 hotfix=`echo "$hf" | cut -d "/"  -f 7`
         fi
         if echo "$hf" | grep "$version" &>/dev/null ; then
-        curl -s -X GET $hf -o $hotfix
+        curl -s -k -X GET $hf -o $hotfix
         /opt/omne/update_module/bin/omne-bb-update check -p $hotfix | cut -d "," -f 6,7
         /opt/omne/update_module/bin/omne-bb-update install -p $hotfix | cut -d '"' -f 8
         echo -e "\n"
