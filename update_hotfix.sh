@@ -2,12 +2,16 @@
 #Por: Acélio Carvalho
 
 version=`cut -d " " -f3 /etc/buildstamp | cut -d '.' -f 1-4`
-ha=`psql -U postgres brcconfig -t -A -c "select 1 from box_cluster_conf where type='disable';"`
 
-if [[ $ha != 1 ]];then
-   echo "Disable HA to continue"
-   exit 0
-fi
+verificar_ha(){
+
+   ha=`psql -U postgres brcconfig -t -A -c "select 1 from box_cluster_conf where type='disable';"`
+
+   if [[ $ha != 1 ]];then
+      echo "Disable HA to continue"
+      exit 0
+   fi
+}
 
 baixar_hotfix() {
         for hf in `curl -sS "https://docs.blockbit.com/display/RC/Hotfixes" | grep -oE '(https://s3.amazonaws.com/repo.blockbit.com/hotfix/([^\"]*)|https://shlink.blockbit.com/\w+)'`; do
@@ -42,6 +46,7 @@ while true; do
         case $choice in
 
         1)
+                verificar_ha 
                 baixar_hotfix
                 echo -e "Todos Hotfix instalados\n"
                 ;;
@@ -52,6 +57,7 @@ while true; do
                 ;;
         3)
 
+                verificar_ha
                 last_hf=`sqlite3 /opt/omne/update_module/db/database_update.sqlite --separator ' - ' "select id,description from updates ORDER BY id DESC LIMIT 1;"`
 
                 echo -e "\nRemovendo hotfix: $last_hf"
@@ -60,7 +66,8 @@ while true; do
 
                 ;;
 
-        4)
+        4)      
+                verificar_ha
                 desc_hf=`sqlite3 /opt/omne/update_module/db/database_update.sqlite --separator ' - ' "select id,description from updates ORDER BY id DESC;"`
                 id=`sqlite3 /opt/omne/update_module/db/database_update.sqlite "select id from updates ORDER BY id DESC;"`
 
