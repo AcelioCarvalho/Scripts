@@ -1,6 +1,6 @@
 #!/bin/bash
 # Por: Acélio Carvalho
-# Nome: Scanning Immutable Files
+# Nome: Immutable File Scanning
 # Objetivo: Verificar arquivos imutaveis antes de qualquer atualizações do BBOS.
 
 find /etc/ /usr/lib/systemd/system/ /opt/addons/ /opt/omne/apply/ /opt/omne/conf/ /opt/omne/bin/ /opt/omne/admin/ajax/ /opt/omne/admin/apps/ ! -path /etc/resolv.conf -type f -not -name "*.png" > files.txt
