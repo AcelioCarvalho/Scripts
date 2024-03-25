@@ -8,7 +8,7 @@ verificar_ha(){
    ha=`/usr/bin/systemctl is-active cluster_ha.service`
    
    if [[ $ha = active ]];then
-      echo "Disable HA to continue"
+      echo "Desabilite o HA para continuar"
       exit 0
    fi
 }
