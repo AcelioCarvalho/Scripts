@@ -5,9 +5,9 @@ version=`cut -d " " -f3 /etc/buildstamp | cut -d '.' -f 1-4`
 
 verificar_ha(){
 
-   ha=`psql -U postgres brcconfig -t -A -c "select 1 from box_cluster_conf where type='disable';"`
-
-   if [[ $ha != 1 ]];then
+   ha=`/usr/bin/systemctl is-active cluster_ha.service`
+   
+   if [[ $ha != active ]];then
       echo "Disable HA to continue"
       exit 0
    fi
