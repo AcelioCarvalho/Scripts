@@ -26,7 +26,7 @@ baixar_hotfix() {
         # Validar os hotfixs por versão do Blockbit
         if [[ "$hf" =~ "$version" ]]; then
 
-               # Pular a instalação de Pacths
+               # Pular a instalação de Patchs
                 if [[ "$hotfix" =~ "patch" ]]; then
 
                         echo "o Patch $hotfix não será instalado"
